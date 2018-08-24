@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>String:</h1>
+
+    <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
+
+    <script>
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        document.getElementById("myCanvas").style.cursor = "pointer";
+        document.getElementById("myCanvas").style.cursor = "auto";
+
+        function clear(){
+            ctx.clearRect(0, 0, c.width, c.height);
+            drawBackground();
+        }
+
+        function drawBackground(){
+            //Background
+            ctx.beginPath();
+            ctx.rect(0, 0, c.width, c.height);
+            ctx.fillStyle = "yellow";
+            ctx.fill();
+
+            //Boxframe
+            ctx.beginPath();
+            ctx.rect(150, 150, 300, 300);
+            ctx.fillStyle = "red";
+            ctx.fill();
+        }
+
+        function drawShape(){
+            clear();
+            draw_circle();
+            draw_lines();
+        }
+
+        //Listen for mouseevents
+        c.onmousedown = myDown;
+        c.onmouseup = myUp;
+        c.onmousemove = myMove;
+
+        var BB = c.getBoundingClientRect();
+        var offsetX = BB.left;
+        var offsetY = BB.top;
+
+        var drag_ok = false;
+        var is_dragging = false;
+        var startX;
+        var startY;
+
+        var circle_x = 300;
+        var circle_y = 300;
+        var circle_r = 10;
+
+        drawShape();
+
+        function draw_circle(){
+            ctx.beginPath();
+            ctx.arc(circle_x, circle_y, circle_r, 0, Math.PI * 2, true);
+            ctx.fillStyle = "black";
+            ctx.fill();
+        }
+
+        function draw_lines(){
+            //Left line
+            ctx.beginPath();
+            ctx.moveTo(150, 300);
+            ctx.lineTo(circle_x, circle_y);
+            ctx.fillStyle ="black";
+            ctx.stroke();
+
+            //Right line
+            ctx.beginPath();
+            ctx.moveTo(450, 300);
+            ctx.lineTo(circle_x, circle_y);
+            ctx.fillStyle ="black";
+            ctx.stroke();
+        }
+
+        function myDown(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+
+            //Mousepos
+            var mouse_x = parseInt(e.clientX-offsetX);
+            var mouse_y = parseInt(e.clientY-offsetY);
+
+            //Testing if mouse is on shape
+            drag_ok = false;
+
+            var dy = circle_y - mouse_y;
+            var dx = circle_x - mouse_x;
+            if(dx * dx + dy * dy < circle_r * circle_r){
+                drag_ok = true;
+                is_dragging = true;
+                console.log("You have clicked inside the circle");
+            }
+
+            //Saves the current mouse position
+            startX = mouse_x;
+            startY = mouse_y;
+        }
+
+        function myUp(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+
+            drag_ok = false;
+            console.log("You released the mouse!");
+            circle_x = 300;
+            circle_y = 300;
+            drawShape();
+        }
+
+        function myMove(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+
+            //Mousepos
+            var mouse_x = parseInt(e.clientX-offsetX);
+            var mouse_y = parseInt(e.clientY-offsetY);
+
+            var dy = circle_y - mouse_y;
+            var dx = circle_x - mouse_x;
+
+            if(dx * dx + dy * dy < circle_r * circle_r){
+                console.log("Yuu are hovering inside the circle!");
+                document.getElementById("myCanvas").style.cursor = "pointer";
+
+            }
+            if(dx * dx + dy * dy > circle_r * circle_r){
+                console.log("Yuu are hovering outside the circle!");
+                document.getElementById("myCanvas").style.cursor = "default";
+            }
+
+            if(drag_ok){
+                if(is_dragging){
+                    circle_x = mouse_x;
+                    circle_y = mouse_y;
+                }
+
+                drawShape();
+
+                startX = mouse_x;
+                startY = mouse_y;
+
+                console.log("You are dragging!");
+            }
+        }
+    </script>
+
+</body>
+</html>

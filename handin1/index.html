@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>HOuse:</h1>
+
+    <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
+    <script>
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        //Background One
+        ctx.beginPath();
+        ctx.rect(0, 425, 600, 600);
+        ctx.fillStyle="green";
+        ctx.fill();
+
+        //Background Two
+        ctx.beginPath();
+        ctx.rect(0, 0, 600, 425);
+        ctx.fillStyle="blue";
+        ctx.fill();
+
+        //Houseframe
+        ctx.beginPath();
+        ctx.rect(150, 300, 300, 300);
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        //Roof
+        ctx.beginPath();
+        ctx.moveTo(150, 300);
+        ctx.lineTo(75, 300);
+        ctx.lineTo(150, 225);
+        ctx.lineTo(450, 225);
+        ctx.lineTo(525, 300);
+        ctx.fillStyle ="black";
+        ctx.fill();
+
+        //Door
+        ctx.beginPath();
+        ctx.rect(225, 400, 75, 175);
+        ctx.fillStyle ="brown";
+        ctx.fill();
+
+        //Thing to step on in front of door
+        ctx.beginPath();
+        ctx.rect(200, 575, 125, 25);
+        ctx.fillStyle = "grey";
+        ctx.fill();
+
+        //Window
+        ctx.beginPath();
+        ctx.rect(335, 400, 75, 75);
+        ctx.fillStyle = "brown";
+        ctx.fill();
+
+        //Window crossthing
+        ctx.beginPath();
+        ctx.moveTo(372.5, 400);
+        ctx.lineTo(372.5, 475);
+        ctx.moveTo(335, 437.5);
+        ctx.lineTo(410, 437.5);
+        ctx.stroke();
+
+        //Doorknob
+        ctx.beginPath();
+        ctx.arc(285, 480, 5, 0, Math.PI * 2, true);
+        ctx.fillStyle ="black";
+        ctx.fill();
+
+        //Door roof
+        ctx.beginPath();
+        ctx.moveTo(225, 400);
+        ctx.lineTo(200, 400);
+        ctx.lineTo(225, 375);
+        ctx.lineTo(300, 375);
+        ctx.lineTo(325, 400);
+        ctx.fillStyle ="grey";
+        ctx.fill();
+
+        // draw cloud
+        ctx.beginPath();
+        ctx.moveTo(170, 80);
+        ctx.bezierCurveTo(130, 100, 130, 150, 230, 150);
+        ctx.bezierCurveTo(250, 180, 320, 180, 340, 150);
+        ctx.bezierCurveTo(420, 150, 420, 120, 390, 100);
+        ctx.bezierCurveTo(430, 40, 370, 30, 340, 50);
+        ctx.bezierCurveTo(320, 5, 250, 20, 250, 50);
+        ctx.bezierCurveTo(200, 5, 150, 20, 170, 80);
+        ctx.closePath();
+        ctx.lineWidth = 5;
+        ctx.fillStyle = '#8ED6FF';
+        ctx.fill();
+        ctx.strokeStyle = '#0000ff';
+        ctx.stroke();
+
+        //Name
+        ctx.beginPath();
+        ctx.strokeStyle = "black";
+        ctx.font = "30px Arial";
+        ctx.strokeText("Victor Larsen Vigmostad", 5, 590, 140);
+    </script>
+</body>
+</html>

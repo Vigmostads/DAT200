@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h2>Making Art:</h2>
+
+    <select id="ddView" onchange="run()">
+        <option value="1">Red</option>
+        <option value="2">Blue</option>
+        <option value="3">Yellow</option>
+    </select>
+
+    <select id="ddAmount" onchange="amountCount()">
+        <option value="16">16</option>
+        <option value="32">32</option>
+        <option value="64">64</option>
+    </select>
+
+    <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
+
+    <script>
+
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        //LAg en tabell og legg punktene i en tabell. Deretter tegn rette linjer mellom punktene.
+        //punkt 80 modulus 72.  80%72=8
+        //72 punkter. Hvis du skal fra 41 så tar du 41 Æ 2 = 82 modulus 72 som gir 10, gå fra punkt 41 til 10.
+
+        //X = (1-p) * x1 + p*x2 P element i [0,1]
+        //y=(1-p)*y1+p*y2
+
+        //For å få de til å g andre veien, 0,9 så går den nadre veien istedenfor 0,1
+
+        var points_x = [];
+        var points_y = [];
+
+        var amount = 16;
+        var v = 360 / amount;
+        var x = 250*Math.cos(v);
+        var y = 250*Math.sin(v);
+
+
+        function run() {
+             strUser = document.getElementById("ddView").value;
+            if(strUser == 1){
+                rectcolor = "red";
+                redraw();
+            }
+            if(strUser == 2) {
+                rectcolor = "blue";
+                redraw();
+            }
+            if(strUser == 3){
+                rectcolor = "yellow";
+                redraw();
+            }
+        }
+
+        function amountCount(){
+            userAmount = document.getElementById("ddAmount").value;
+            if(userAmount == 16){
+                amount = 16;
+                console.log("Amount set to 16");
+            }
+            if(userAmount == 32){
+                amount = 32;
+                console.log("Amount set to 16");
+            }
+            if(userAmount == 64){
+                amount = 64;
+                console.log("Amount set to 16");
+            }
+        }
+
+
+
+        for(var i = 0; i++; i < 15){
+
+        }
+
+
+
+
+        var rectcolor = "green";
+
+        clear();
+        draw();
+
+        function clear(){
+            ctx.clearRect(0, 0, c.width, c.height);
+        }
+
+        function draw(){
+            ctx.beginPath();
+            ctx.arc(300, 300, 100, 0, Math.PI * 2, true);
+            ctx.fillStyle=rectcolor;
+            ctx.fill();
+        }
+
+        function redraw(){
+            clear();
+            draw();
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>
