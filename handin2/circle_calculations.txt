@@ -1,4 +1,4 @@
-16 22.5
+﻿16 22.5
 360 / amountofpoints
 
 1: 300, 0
@@ -17,4 +17,55 @@
 14:
 15:
 16:
+
+
+  //LAg en tabell og legg punktene i en tabell. Deretter tegn rette linjer mellom punktene.
+   //punkt 80 modulus 72.  80%72=8
+  //72 punkter. Hvis du skal fra 41 så tar du 41 Æ 2 = 82 modulus 72 som gir 10, gå fra punkt 41 til 10.
+
+  //X = (1-p) * x1 + p*x2 P element i [0,1]
+  //y=(1-p)*y1+p*y2
+
+   //For å få de til å g andre veien, 0,9 så går den nadre veien istedenfor 0,1
+
+ x1 = width -(0.9 * width);
+                x2 = width;
+                x3 = width * 0.9;
+                x4 = 0;
+                y1 = height;
+                y2 = 0.9 * height;
+                y3 = 0;
+                y4 = height - (0.9 * height);
+
+x = (1-p) * x1 + p * x2; 0,9 * 0 + 0,1 * 150 = 135
+x = (1-p) * x2 + p * x3; 0,9 * 150 + 0,1 * 150 = 15 + 135 = 150
+x = (1-p) * x3 + p * x4; 0,9 * 150 + 0,1 * 0 = 15
+x = (1-p) * x4 + p * x1; 0,9 * 0 + 0,1 * 0 = 0
+
+
+x1=15
+x2=150
+x3=135
+x4=0
+
+y1=150
+y2=135
+y3=0
+y4=15
+
+x= 0.9 * 15 + 0.1 * 150 = 15.5 + 15 = 28.5
+y= 0.9 * 150 + 0.1 * 135 = 135 + 13,5 = 148.5
+
+x= 0,9 * 150 + 0.1 * 135 = 135 + 13.5 = 148.5
+y= 0,9 * 135 + 0,1 * 0 = 121.5
+
+
+
+
+
+
+
+
+
+
 

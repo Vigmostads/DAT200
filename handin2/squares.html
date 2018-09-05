@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Making Squares!</h1>
+
+    <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
+
+    <script>
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d")
+
+        var j = 0;
+        var k = 0;
+        var interval = 0;
+
+        function squareClockwise(){
+
+            var p = 0.1;
+
+            if(isOdd(interval)){
+                p = 0.9;
+            }
+            else{
+                p = 0.1;
+            }
+
+            var x1 = 0 + (j * 150);
+            var x2 = 150 + (j * 150);
+            var x3 = 150 + (j * 150);
+            var x4 = 0 + (j * 150);
+
+            var y1 = 0 + (k * 150);
+            var y2 = 0 + (k * 150);
+            var y3 = 150 + (k * 150);
+            var y4 = 150 + (k * 150);
+
+            for(let i = 0; i < 25; i++){
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.lineTo(x3, y3);
+                ctx.lineTo(x4, y4);
+                ctx.lineTo(x1, y1);
+                ctx.fillStyle = "blue";
+                ctx.lineWidth = 1.3;
+                ctx.stroke();
+
+                let x11 = (1-p) * x1 + p * x2;
+                let x22 = (1-p) * x2 + p * x3;
+                let x33 = (1-p) * x3 + p * x4;
+                let x44 = (1-p) * x4 + p * x1;
+
+                x1 = x11;
+                x2 = x22;
+                x3 = x33;
+                x4 = x44;
+
+                let y11 = (1-p) * y1 + p * y2;
+                let y22 = (1-p) * y2 + p * y3;
+                let y33 = (1-p) * y3 + p * y4;
+                let y44 = (1-p) * y4 + p * y1;
+
+                y1 = y11;
+                y2 = y22;
+                y3 = y33;
+                y4 = y44;
+            }
+
+            interval++;
+            if(j == 3){
+                j = 0;
+                interval--;
+                if(k == 3){
+                    k = 0;
+                }
+                else{
+                    k++;
+                }
+            }
+            else{
+                j++;
+            }
+        }
+
+        function isOdd(n) {
+            return Math.abs(n % 2) == 1;
+        }
+
+
+        function clear(){
+            ctx.clearRect(0, 0, c.width, c.height);
+        }
+
+        function redraw(){
+            clear();
+            for(let i = 0; i < 16; i++){
+                squareClockwise();
+            }
+
+        }
+
+        redraw();
+
+    </script>
+</body>
+</html>

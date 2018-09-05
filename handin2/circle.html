@@ -30,8 +30,8 @@
         </select>
 
         <select id="ddView" onchange="run()">
-            <option value="1">Red</option>
-            <option value="2">Blue</option>
+            <option value="1">Blue</option>
+            <option value="2">Red</option>
             <option value="3">Yellow</option>
         </select>
 
@@ -168,11 +168,11 @@
         function run() {
              strUser = document.getElementById("ddView").value;
             if(strUser == 1){
-                shapeColor = "red";
+                shapeColor = "blue";
                 redraw();
             }
             if(strUser == 2) {
-                shapeColor = "blue";
+                shapeColor = "red";
                 redraw();
             }
             if(strUser == 3){
