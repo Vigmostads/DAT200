@@ -5,19 +5,47 @@
     <title>Title</title>
 </head>
 <body>
-    <h2>Making Art:</h2>
+    <div>
+        K Value: <input type="number" name="K" id="dddK" onchange="changeInputK()"><br>
+        Amount: <input type="number" name="Amount" id="dddA" onchange="changeInputAmount()"><br>
+        <div>
+            <button onclick="incrementUp()">Increment</button>
+            <button onclick="incrementDown()">Deincrement</button>
+            <p id="showK"></p>
+        </div>
 
-    <select id="ddView" onchange="run()">
-        <option value="1">Red</option>
-        <option value="2">Blue</option>
-        <option value="3">Yellow</option>
-    </select>
 
-    <select id="ddAmount" onchange="amountCount()">
-        <option value="16">16</option>
-        <option value="32">32</option>
-        <option value="64">64</option>
-    </select>
+        <select id="ddK" onchange="changeK()">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="17">Magic17</option>
+            <option value="25">Magic25</option>
+            <option value="32">32</option>
+            <option value="77">Magic77</option>
+            <option value="128">128</option>
+        </select>
+
+        <select id="ddView" onchange="run()">
+            <option value="1">Red</option>
+            <option value="2">Blue</option>
+            <option value="3">Yellow</option>
+        </select>
+
+        <select id="ddAmount" onchange="amountCount()">
+            <option value="16">16</option>
+            <option value="32">32</option>
+            <option value="64">64</option>
+            <option value="128">128</option>
+            <option value="256">256</option>
+            <option value="512">512</option>
+            <option value="1024">1024</option>
+        </select>
+    </div>
+
 
     <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
 
@@ -38,74 +66,255 @@
         var points_x = [];
         var points_y = [];
 
+        var radius = 280;
         var amount = 16;
-        var v = 360 / amount;
-        var x = 250*Math.cos(v);
-        var y = 250*Math.sin(v);
+        var vinkel = 0;
+        var k = 1;
+        var currK = k;
+        currK = parseInt(currK);
+        k = parseInt(k);
+        var shapeColor = "blue";
+
+        function makePoints(){
+            vinkel = (2 * Math.PI) / amount;
+            for(let i = 0; i < amount; i++){
+                let tempVinkel = i*vinkel;
+
+                let x = radius * Math.cos(tempVinkel) + 300;
+                let y = radius * Math.sin(tempVinkel) + 300;
+
+                points_x.push(x);
+                points_y.push(y);
+
+                console.log(points_x);
+                console.log(points_y);
+
+                console.log("WE ARE IN THE LOOP!");
+            }
+        }
+
+        function drawPoints(){
+            for(let i = 0; i < amount; i++){
+                ctx.beginPath();
+                ctx.arc(points_x[i], points_y[i], 5, 0, Math.PI * 2, true);
+                ctx.fillStyle=shapeColor;
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(points_x[i], points_y[i]);
+                ctx.lineTo(points_x[i+1], points_y[i+1]);
+                ctx.fillStyle =shapeColor;
+                ctx.stroke();
+            }
+            var last_element_x = (points_x.length - 1);
+            var last_element_y = (points_y.length - 1);
+            ctx.beginPath();
+            ctx.moveTo(points_x[last_element_x], points_y[last_element_y]);
+            ctx.lineTo(points_x[0], points_y[0]);
+            ctx.fillStyle=shapeColor;
+            ctx.stroke();
+        }
+
+        function changeInputAmount(){
+            userAmount = document.getElementById("dddA").value;
+            amount = userAmount;
+            amount = parseInt(amount);
+            points_x = [];
+            points_y = [];
+            makePoints();
+            redraw();
+            console.log("Amount is now: " + amount);
+        }
+
+        function changeInputK(){
+            userAmount = document.getElementById("dddK").value;
+            k = userAmount;
+            k = parseInt(k);
+            redraw();
+            console.log("K is now: " + k);
+        }
+
+        function incrementUp(){
+            k++;
+            document.getElementById("showK").innerHTML = "K is now: " + k;
+            redraw();
+            console.log("K is now: " + k);
+        }
+
+        function incrementDown(){
+            k--;
+            document.getElementById("showK").innerHTML = "K is now: " + k;
+            redraw();
+            console.log("K is now: " + k);
+        }
+
+
+
+        function drawLines(){
+            currK = 0;
+            for(let i = 0; i < amount; i++){
+                ctx.beginPath();
+                ctx.moveTo(points_x[i], points_y[i]);
+                ctx.lineTo(points_x[currK % amount], points_y[currK % amount]);
+                ctx.fillStyle=shapeColor;
+                ctx.stroke();
+
+                currK = k + currK;
+            }
+
+        }
 
 
         function run() {
              strUser = document.getElementById("ddView").value;
             if(strUser == 1){
-                rectcolor = "red";
+                shapeColor = "red";
                 redraw();
             }
             if(strUser == 2) {
-                rectcolor = "blue";
+                shapeColor = "blue";
                 redraw();
             }
             if(strUser == 3){
-                rectcolor = "yellow";
+                shapeColor = "yellow";
                 redraw();
             }
+        }
+
+        function changeK(){
+            userAmount = document.getElementById("ddK").value;
+            if(userAmount == 1){
+                k = 1;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 2){
+                k = 2;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 3){
+                k = 3;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 4){
+                k = 4;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 5){
+                k = 5;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 6){
+                k = 6;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 17){
+                k = 17;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 32){
+                k = 32;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 128){
+                k = 128;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 25){
+                k = 25;
+                redraw();
+                console.log("K set to " + k);
+            }
+            if(userAmount == 77){
+                k = 77;
+                redraw();
+                console.log("K set to " + k);
+            }
+
         }
 
         function amountCount(){
             userAmount = document.getElementById("ddAmount").value;
             if(userAmount == 16){
                 amount = 16;
-                console.log("Amount set to 16");
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
             }
             if(userAmount == 32){
                 amount = 32;
-                console.log("Amount set to 16");
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
             }
             if(userAmount == 64){
                 amount = 64;
-                console.log("Amount set to 16");
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
+            }
+            if(userAmount == 128){
+                amount = 128;
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
+            }
+            if(userAmount == 256){
+                amount = 256;
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
+            }
+            if(userAmount == 512){
+                amount = 512;
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
+            }
+            if(userAmount == 1024){
+                amount = 1024;
+                points_x = [];
+                points_y = [];
+                makePoints();
+                redraw();
+                console.log("Amount set to " + amount);
             }
         }
-
-
-
-        for(var i = 0; i++; i < 15){
-
-        }
-
-
-
-
-        var rectcolor = "green";
-
-        clear();
-        draw();
 
         function clear(){
             ctx.clearRect(0, 0, c.width, c.height);
         }
 
-        function draw(){
-            ctx.beginPath();
-            ctx.arc(300, 300, 100, 0, Math.PI * 2, true);
-            ctx.fillStyle=rectcolor;
-            ctx.fill();
-        }
-
         function redraw(){
+
             clear();
-            draw();
+            drawLines();
+            drawPoints();
+
         }
 
+        makePoints();
+        redraw();
 
 
 
