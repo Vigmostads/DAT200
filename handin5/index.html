@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>Handin5:</h1>
+
+    <button onclick="clearAll()">Clear</button>
+    <button onclick="activateDraw()">Draw</button>
+    <button onclick="rotate()">Rotate</button>
+    <button onclick="scaleUp()">Scale Up</button>
+    <button onclick="scaleDown()">Scale Down</button>
+    <button onclick="activateMove()">Translation</button>
+
+
+    <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;"></canvas>
+
+    <script type="text/javascript">
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        document.getElementById("myCanvas").style.cursor = "pointer";
+        document.getElementById("myCanvas").style.cursor = "auto";
+
+        var points_x = [];
+        var points_y = [];
+
+        var drawing = false;
+        var moving = false;
+        var dragging = false;
+
+        var BB = c.getBoundingClientRect();
+        var offsetX = BB.left;
+        var offsetY = BB.top;
+
+        function activateDraw(){
+            drawing = true;
+            moving = false;
+            console.log("Drawing activated!");
+        }
+
+        function activateMove(){
+            drawing = false;
+            moving = true;
+            console.log("Move activated!");
+        }
+
+        function clearCanvas(){
+            ctx.clearRect(0, 0, c.width, c.height);
+            console.log("Cleared");
+        }
+
+        function clearAll(){
+            clearCanvas();
+            points_x = [];
+            points_y = [];
+        }
+
+        function drawShape(){
+            clearCanvas();
+            drawLines();
+            finnMidten();
+        }
+
+        //Listen for mouseevents
+        c.onmousedown = myDown;
+        c.onmousemove = myMove;
+        c.onmouseup = myUp;
+
+        function myUp(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+
+            dragging = false;
+            drawShape();
+        }
+
+        function myMove(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+            //Mousepos
+            var mouse_x = parseInt(e.clientX-offsetX);
+            var mouse_y = parseInt(e.clientY-offsetY);
+
+            console.log("X: " + mouse_x);
+            console.log("Y: " + mouse_y);
+
+            if(dragging === true && moving === true){
+                var temp_points = finnMidten();
+                var mid_x = temp_points[0];
+                var mid_y = temp_points[1];
+
+                var dy =  mouse_y - mid_y;
+                var dx = mouse_x - mid_x;
+
+                for(let i = 0; i < points_y.length; i++){
+                    points_x[i] = points_x[i] + dx;
+                    points_y[i] = points_y[i] + dy;
+                }
+                drawShape();
+            }
+
+        }
+
+        function myDown(e){
+            //TEll the browser to not mess up my eventhandler
+            e.preventDefault();
+            e.stopPropagation();
+            //Mousepos
+            var mouse_x = parseInt(e.clientX-offsetX);
+            var mouse_y = parseInt(e.clientY-offsetY);
+
+            console.log("X: " + mouse_x);
+            console.log("Y: " + mouse_y);
+
+            if(drawing === true){
+                points_x.push(mouse_x);
+                points_y.push(mouse_y);
+
+                drawShape();
+            }
+
+            if(moving === true){
+                dragging = true;
+            }
+        }
+
+        function drawLines(){
+            for(let i  = 0; (i < points_x.length) && (i < points_y.length); i++){
+                ctx.beginPath();
+                ctx.moveTo(points_x[i], points_y[i]);
+                ctx.lineTo(points_x[i+1], points_y[i+1]);
+                ctx.fillStyle = "black";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            ctx.beginPath();
+            ctx.moveTo(points_x[points_x.length - 1], points_y[points_y.length - 1]);
+            ctx.lineTo(points_x[0], points_y[0]);
+            ctx.fillStyle = "black";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        function finnMidten(){
+            var midt_points = [];
+            var midt_x = 0;
+            var midt_y = 0;
+
+            for(let i = 0; i < points_x.length; i++){
+                midt_x += points_x[i];
+                midt_y += points_y[i];
+            }
+            midt_x = midt_x / points_x.length;
+            midt_y = midt_y / points_y.length;
+
+            ctx.beginPath();
+            ctx.arc(midt_x, midt_y, 5, 0, Math.PI * 2, true);
+            ctx.fillStyle = "black";
+            ctx.fill();
+
+            console.log("Midt x: " + midt_x);
+            console.log("Midt y: " + midt_y);
+
+            midt_points.push(midt_x);
+            midt_points.push(midt_y);
+
+            return midt_points;
+        }
+
+        function rotate(){
+            var temp_points = finnMidten();
+            var mid_x = temp_points[0];
+            var mid_y = temp_points[1];
+            var angle = Math.PI / 6;
+            console.log("Points: " + temp_points);
+            console.log("Point x: " + temp_points[0]);
+            console.log("Point y: " + temp_points[1]);
+
+            for(let i = 0; i < points_y.length; i++){
+                let x = mid_x + (points_x[i] - mid_x) * Math.cos(angle) - (points_y[i] - mid_y) * Math.sin(angle);
+                let y = mid_y + (points_x[i] - mid_x) * Math.sin(angle) + (points_y[i] - mid_y) * Math.cos(angle);
+
+                points_x[i] = x;
+                points_y[i] = y;
+            }
+            drawShape();
+        }
+
+        function translate(){
+
+        }
+
+        function scaleUp(){
+            var scale = 1.2;
+            var temp_points = finnMidten();
+            var mid_x = temp_points[0];
+            var mid_y = temp_points[1];
+            for(let i = 0; i < points_x.length; i++){
+                points_x[i] = points_x[i] * scale + mid_x * (1 - scale);
+                points_y[i] = points_y[i] * scale + mid_y * (1 - scale);
+            }
+            drawShape();
+        }
+
+        function scaleDown(){
+            var scale = 0.8;
+            var temp_points = finnMidten();
+            var mid_x = temp_points[0];
+            var mid_y = temp_points[1];
+            for(let i = 0; i < points_x.length; i++){
+                points_x[i] = points_x[i] * scale + mid_x * (1 - scale);
+                points_y[i] = points_y[i] * scale + mid_y * (1 - scale);
+            }
+            drawShape();
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>
